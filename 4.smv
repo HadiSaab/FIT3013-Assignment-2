@@ -2,24 +2,25 @@ MODULE main
   VAR
     change_value : 1..4;
     change_index  : 0..3;
+    change_type: {guess, unguess};
     c0 : cell(0, 0, change_value, change_index);
     c1 : cell(1, 0, change_value, change_index);
     c2 : cell(2, 0, change_value, change_index);
     c3 : cell(3, 0, change_value, change_index);
     
   -- change_value and change_index are randomly determined
+  
 
   DEFINE
-    n0 := c0.n;
-    n1 := c1.n;
-    n2 := c2.n;
-    n3 := c3.n;
---    grid :=  [ n0, n1, n2, n3 ];
---    box00  :=  [grid[0],grid[1]];
+    -- think of defines as macros. Ratber tba 
+    grid :=  [ c0.n, c1.n, c2.n, c3.n ];
+    box0  :=  [grid[0],grid[3]];
+    
 
-  CTLSPEC AG !( n0 = 3);
 
-MODULE cell(index, value, change_val, change_index)
+  CTLSPEC ! EF((box0[0]=1) & (box0[1]=2 ));
+
+MODULE cell(index, value, change_val, change_index, change_type)
   VAR
     n : 0..4;
     i : 0..3;
@@ -36,17 +37,13 @@ MODULE cell(index, value, change_val, change_index)
 
 
 
-MODULE box(box_array)
--- models a 2*2 box  
--- param box_array is an array_expression with dimensions 1*4
+MODULE box_constraint(box_array)
+-- models a 1*2 box  
+-- param box_array is an array_expression with dimensions 1*2
 VAR
   b1 : boolean;
   b2 : boolean;
-  b3 : boolean;
-  b4 : boolean;
 
 ASSIGN
   init(b1) := FALSE;
   init(b2) := FALSE;
-  init(b3) := FALSE;
-  init(b4) := FALSE;
