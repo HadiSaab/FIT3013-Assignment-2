@@ -1,7 +1,9 @@
 MODULE main 
+  INVAR
+    clues[change_index] = 0;
   VAR
     change_value : 2..3;
-    change_index  : 0..2;
+    change_index  : 0..35;
 --    change_value : 0..6;
 --    change_index  : 0..35;
     c0  : cell( 0, clues[ 0], change_value, change_index);
@@ -41,16 +43,17 @@ MODULE main
     c34 : cell(34, clues[34], change_value, change_index);
     c35 : cell(35, clues[35], change_value, change_index);
     
-  -- change_value and change_index are randomly determined
-  
 
   DEFINE
+    -- nb, had to hardcore a list of the indexes of the clues
+    clue_indexes = [0,1,6,12,15,20,23,29,34,35];
     clues := [ 5, 4, 0, 0, 0, 0,
                6, 0, 0, 0, 0, 0,
                4, 0, 0, 6, 0, 0,
                0, 0, 1, 0, 0, 4,
                0, 0, 0, 0, 0, 1,
                0, 0, 0, 0, 3, 2  ];
+
     erase := (change_value = 0);
     fill  := !erase;
     -- think of defines as macros. Ratber tba 
@@ -81,6 +84,18 @@ MODULE main
     box3  :=  [  c15.n,  c16.n, c17.n,  c21.n, c22.n, c23.n ]; 
     box4  :=  [  c24.n, c25.n, c26.n,  c30.n, c31.n, c32.n ];
     box5  :=  [  c27.n, c28.n, c29.n,  c33.n, c34.n, c35.n ]; 
+
+  -- change_value and change_index are randomly determined
+  ASSIGN
+--    init(change_index) :=   
+
+--    init(n) := value;
+
+ --   next(i) := i;
+ --   next(n) := case
+ --     change_index = i : change_val;
+ --     TRUE : n;
+ --   esac;
 
   CTLSPEC  !EF(grid[1] = 2 );
 
