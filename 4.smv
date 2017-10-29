@@ -1,0 +1,71 @@
+MODULE main 
+  VAR
+    grid : array 0..15 of 0..4;
+    change_value : 1..4;
+    change_index  : 0..15;
+    c0 : cell(0, 0, change_index, change_value, grid);
+    c1 : cell(1, 0,change_index, change_value, grid);
+    c2 : cell(2, 0,change_index, change_value, grid);
+    c3 : cell(3, 0,change_index, change_value, grid);
+    c4 : cell(4, 0,change_index, change_value, grid);
+    c5 : cell(5, 0,change_index, change_value, grid);
+    c6 : cell(6, 0,change_index, change_value, grid);
+    c7 : cell(7, 0,change_index, change_value, grid);
+    c8 : cell(8, 0,change_index, change_value, grid);
+    c9 : cell(9, 0,change_index, change_value, grid);
+    c10 : cell(10, 0,change_index, change_value, grid);
+    c11 : cell(11, 0,change_index, change_value, grid);
+    c12 : cell(12, 0,change_index, change_value, grid);
+    c13 : cell(13, 0,change_index, change_value, grid);
+    c14 : cell(14, 0,change_index, change_value, grid);
+    c15 : cell(15, 0,change_index, change_value, grid);
+    
+  ASSIGN
+    init(grid) := zero_grid;
+
+  DEFINE
+    -- just used to initialize an empty grid 
+    zero_grid :=  [ c0.v, c1.v, c2.v, c3.v,
+                    c4.v, c5.v, c6.v, c7.v,
+                    c8.v, c9.v, c10.v,c11.v,
+                    c12.v,c13.v,c14.v,c15.v ];
+
+  --  zero_grid :=  [ 0,0,0,0,
+  --                 0,0,0,0,
+  --                  0,0,0,0,
+  --                 0,0,0,0 ];
+    box00     :=  [grid[0],grid[1],grid[4],grid[5]];
+
+  LTLSPEC  !( grid[0] = 3);
+
+MODULE cell(i, value, ci, cv, grid)
+  -- i: the cells index in the grid
+  -- : n, the cells numeric value : 0..5
+  -- ci: change index, the cell being modified this turn
+  -- cv: change value, the new value of the cell being changed
+  -- grid: the game grid 
+  VAR
+    v : 0..4;
+
+  ASSIGN
+    init(v) := value;
+    next(grid[i]) := case
+      ci != i : grid[i];
+      ci = i  : cv;
+    esac;
+
+
+MODULE box(box_array)
+-- models a 2*2 box  
+-- param box_array is an array_expression with dimensions 1*4
+VAR
+  b1 : boolean;
+  b2 : boolean;
+  b3 : boolean;
+  b4 : boolean;
+
+ASSIGN
+  init(b1) := FALSE;
+  init(b2) := FALSE;
+  init(b3) := FALSE;
+  init(b4) := FALSE;
