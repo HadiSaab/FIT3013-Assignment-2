@@ -1,58 +1,39 @@
 MODULE main 
   VAR
-    grid : array 0..15 of 0..4;
     change_value : 1..4;
-    change_index  : 0..15;
-    c0 : cell(0, 0, change_index, change_value, grid);
-    c1 : cell(1, 0,change_index, change_value, grid);
-    c2 : cell(2, 0,change_index, change_value, grid);
-    c3 : cell(3, 0,change_index, change_value, grid);
-    c4 : cell(4, 0,change_index, change_value, grid);
-    c5 : cell(5, 0,change_index, change_value, grid);
-    c6 : cell(6, 0,change_index, change_value, grid);
-    c7 : cell(7, 0,change_index, change_value, grid);
-    c8 : cell(8, 0,change_index, change_value, grid);
-    c9 : cell(9, 0,change_index, change_value, grid);
-    c10 : cell(10, 0,change_index, change_value, grid);
-    c11 : cell(11, 0,change_index, change_value, grid);
-    c12 : cell(12, 0,change_index, change_value, grid);
-    c13 : cell(13, 0,change_index, change_value, grid);
-    c14 : cell(14, 0,change_index, change_value, grid);
-    c15 : cell(15, 0,change_index, change_value, grid);
+    change_index  : 0..3;
+    c0 : cell(0, 0, change_value, change_index);
+    c1 : cell(1, 0, change_value, change_index);
+    c2 : cell(2, 0, change_value, change_index);
+    c3 : cell(3, 0, change_value, change_index);
     
-  ASSIGN
-    init(grid) := zero_grid;
+  -- change_value and change_index are randomly determined
 
   DEFINE
-    -- just used to initialize an empty grid 
-    zero_grid :=  [ c0.v, c1.v, c2.v, c3.v,
-                    c4.v, c5.v, c6.v, c7.v,
-                    c8.v, c9.v, c10.v,c11.v,
-                    c12.v,c13.v,c14.v,c15.v ];
+    n0 := c0.n;
+    n1 := c1.n;
+    n2 := c2.n;
+    n3 := c3.n;
+--    grid :=  [ n0, n1, n2, n3 ];
+--    box00  :=  [grid[0],grid[1]];
 
-  --  zero_grid :=  [ 0,0,0,0,
-  --                 0,0,0,0,
-  --                  0,0,0,0,
-  --                 0,0,0,0 ];
-    box00     :=  [grid[0],grid[1],grid[4],grid[5]];
+  CTLSPEC AG !( n0 = 3);
 
-  LTLSPEC  !( grid[0] = 3);
-
-MODULE cell(i, value, ci, cv, grid)
-  -- i: the cells index in the grid
-  -- : n, the cells numeric value : 0..5
-  -- ci: change index, the cell being modified this turn
-  -- cv: change value, the new value of the cell being changed
-  -- grid: the game grid 
+MODULE cell(index, value, change_val, change_index)
   VAR
-    v : 0..4;
+    n : 0..4;
+    i : 0..3;
 
   ASSIGN
-    init(v) := value;
-    next(grid[i]) := case
-      ci != i : grid[i];
-      ci = i  : cv;
+    init(i) := index;
+    init(n) := value;
+
+    next(i) := i;
+    next(n) := case
+      change_index = i : change_val;
+      TRUE : n;
     esac;
+
 
 
 MODULE box(box_array)
