@@ -2,7 +2,6 @@ MODULE main
   VAR
     change_value : 0..6;
     change_index  : 0..35;
-    change_type: {fill, erase};
     c0 : cell(0, 0, change_value, change_index);
     c1 : cell(1, 0, change_value, change_index);
     c2 : cell(2, 0, change_value, change_index);
@@ -44,6 +43,8 @@ MODULE main
   
 
   DEFINE
+    erase := (change_value = 0);
+    fill  := !erase;
     -- think of defines as macros. Ratber tba 
     grid  :=  [  c0.n,  c1.n,  c2.n,  c3.n,   c4.n,  c5.n, 
                  c6.n,  c7.n,  c8.n,  c9.n,  c10.n, c11.n, 
@@ -66,13 +67,20 @@ MODULE main
     col4  :=  [  c4.n,  c10.n,  c16.n,  c22.n,  c28.n, c34.n ]; 
     col5  :=  [  c5.n,  c11.n,  c17.n,  c23.n,  c29.n, c35.n ]; 
 
-  CTLSPEC ! EF((box0[0]=1) & (box0[1]=2 ));
+    box0  :=  [  c0.n,  c1.n,  c2.n,  c6.n,  c7.n,   c8.n ];
+    box1  :=  [   c3.n,  c4.n,  c5.n,   c9.n, c10.n, c11.n ]; 
+    box2  :=  [  c12.n, c13.n, c14.n,  c18.n, c19.n, c20.n ];
+    box3  :=  [  c15.n,  c16.n, c17.n,  c21.n, c22.n, c23.n ]; 
+    box4  :=  [  c24.n, c25.n, c26.n,  c30.n, c31.n, c32.n ];
+    box5  :=  [  c27.n, c28.n, c29.n,  c33.n, c34.n, c35.n ]; 
+
+  CTLSPEC ! EF(grid[5] = 4);
 
 MODULE cell(index, value, change_val, change_index)
   VAR
-    n : 0..4;
-    i : 0..3;
-
+    n : 0..6;   --n is the value of this grid cell
+    i : 0..35;  -- the grid index of this cell. 
+                --row 1 starts at 0, row 2 at 6 ... 
   ASSIGN
     init(i) := index;
     init(n) := value;
