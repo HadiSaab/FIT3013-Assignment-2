@@ -82,7 +82,8 @@ MODULE main
     -- to one in a manner that satisfies the constraints 
 --    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
     next(grid[n*row+col] = 0) xor
-      (next(grid[n*row+col] != 0) & next(col_num_grid[n*row+col] = FALSE));
+      --note have to do num-1 because num is 1..4, we need 0..3 for indicies
+      (next(grid[n*row+col] != 0) & next(col_num_grid[n*col + num - 1] = FALSE));
 
 
 --removed coz invar    clues[next(row*n+col)] = 0;  
