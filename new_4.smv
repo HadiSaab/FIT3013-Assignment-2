@@ -75,13 +75,13 @@ MODULE main
 --  INVAR --my understanding is that this is like init+trans
  --   clues[row*n+col] = 0;    -- move/4 maps to that moves N*N grid cell.
   INIT
-    (clues[row*n+col] = 0) & col_num_grid[n*col + num-1] = FALSE;  
+    (clues[row*n+col] = 0) & col_num_grid[n*col + num - 1] = FALSE;  
     -- either move will be deleting from a non empty cell, XOR inserting
     -- to one in a manner that satisfies the constraints 
 --    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
       --note have to do num-1 because num is 1..4, we need 0..3 for indicies
   TRANS
-    grid[n*next(row)+next(col)] != 0 xor
+    grid[n*next(row)+next(col)] = num xor
       ((grid[n*next(row)+next(col)] = 0) & (col_num_grid[n*next(col) + next(num) - 1] = FALSE));
 
 
