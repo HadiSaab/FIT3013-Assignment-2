@@ -1,28 +1,81 @@
 MODULE main 
  VAR
-    move : 0..(num_moves); 
-    grid : array 0..num_grid of 0..n;
+    move  : 0..(num_moves); 
+    c00   : cell(clues[0], 0, move);       
+    c01   : cell(clues[1], 1, move);       
+    c02   : cell(clues[2], 2, move);       
+    c03   : cell(clues[3], 3, move);       
+    c04   : cell(clues[4], 4, move);       
+    c05   : cell(clues[5], 5, move);       
+    c06   : cell(clues[6], 6, move);       
+    c07   : cell(clues[7], 7, move);       
+    c08   : cell(clues[8], 8, move);       
+    c09   : cell(clues[9], 9, move);       
+    c10   : cell(clues[10],10 , move);       
+    c11   : cell(clues[11], 11, move);       
+    c12   : cell(clues[12],12 , move);       
+    c13   : cell(clues[13],13 , move);       
+    c14   : cell(clues[14],14 , move);       
+    c15   : cell(clues[15], 15, move);       
 
    
   INIT                    -- moves must not overwrite clues
-    clues[move/4] = 0;    -- move/4 maps to that moves N*N grid cell.
-  INIT
-    grid = clues;         --seeing if i can initialize the grid this way
+    clues[move/n] = 0;    -- move/4 maps to that moves N*N grid cell.
     
-
   TRANS
-    clues[next(move)  n] = 0;  
+    clues[next(move)/n] = 0;  
   --INVAR clues[move] = 0;
   
   DEFINE
+-- cannot have raw module references in grid, but can have grid of their attributes
+--    grid      := [  c00, c01, c02, c03,
+--                    c04, c05, c06, c07,
+--                    c08, c09, c10, c11,
+ --                   c12, c13, c14.value, c15.value  ];
     n := box_rows+box_cols;
     num_grid := (n*n)-1;    -- number of grid cells, minus 1
     num_moves := (n*n*n)-1; -- number of possible (r,c,#) values, minus 1
     box_rows := 2;
     box_cols :=2;
+    no_empty := 
+      c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
+      c04.value != 0 & c05.value != 0 & c06.value != 0 & c07.value != 0 &
+      c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &  
+      c12.value != 0 & c13.value != 0 & c14.value != 0 & c15.value != 0 ;
     clues := [3,0,4,0,
               0,1,0,3, 
               2,3,0,0,
               1,0,0,2];
-    
-  CTLSPEC EF (clues[15] = 2);
+  CTLSPEC !EF (no_empty) ;
+
+-- c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
+-- c04.value != 0 & c05.value != 0 & c06.value != 0 & c07.value != 0 &
+-- c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &
+-- c12.value != 0 & c13.value != 0 & c14.value != 0 & c15.value != 0 &
+
+MODULE cell(starting_value, grid_index, move)
+--note, each 'move' is a number in range 0..(n*n*n)-1
+--move/n maps it to a cell in the 1d grid representing the 2d game grid
+-- (move mod n) + 1 maps it to the value in range 1..n
+-- MODULE main prevents move from mapping to a cell containing a starting clue
+  VAR
+    value: 0..n; --this cells number value. 0 represents empty
+  ASSIGN
+    init(value) := starting_value;
+    next(value) := case
+                --if move does not concern this cell, value stays same
+                (move / n) != index : value;
+                --else if move is for this cell, and cell is empty   
+                --then fill this cell with the the new value
+                ((move / n) = index) & (value = 0) : new_value ;
+                --else if move is for this cell, but cell has a value, undo it
+                -- (Because case only gets to this if previous two were false,
+                -- the else if is implicit)
+                 TRUE : 0;
+    esac;
+    --move/n maps (r,c,n) to (r,c)
+  DEFINE
+    index := grid_index; --the index of this cell      
+    new_value := (move mod n) + 1;
+    n := 4; 
+
