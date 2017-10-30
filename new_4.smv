@@ -80,7 +80,10 @@ MODULE main
   TRANS
     -- either move will be deleting from a non empty cell, XOR inserting
     -- to one in a manner that satisfies the constraints 
-    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
+--    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
+    next(grid[n*num+col] = 0) xor
+      (next(grid[n*num+col] != 0) and next(col_num_grid[n*num+col] = FALSE));
+
 
 --removed coz invar    clues[next(row*n+col)] = 0;  
   
@@ -99,8 +102,9 @@ MODULE main
     num_grid := (n*n)-1;    -- number of grid cells, minus 1
     num_moves := (n*n*n)-1; -- number of possible (r,c,#) values, minus 1
     box_rows := 2;
-    box_cols :=2;
-    no_empty := 
+    box_cols : =2; --remember, in  6*6 sudoku, box has 2 rows and 3 cols
+    -- no_empty evaluates to true only when no cells are empty
+    no_empty :=           
       c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
       c04.value != 0 & c05.value != 0 & c06.value != 0 & c07.value != 0 &
       c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &  
