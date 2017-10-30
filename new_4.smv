@@ -38,57 +38,49 @@ MODULE main
     cn33   : col_num(grid, col, num, 3,3);       
     cn34   : col_num(grid, col, num, 3,4);       
    --this are the row-number constraints
-    rn01   : row_num(clues, row, num, 0,1);       
-    rn02   : row_num(clues, row, num, 0,2);       
-    rn03   : row_num(clues, row, num, 0,3);       
-    rn04   : row_num(clues, row, num, 0,4);       
-    rn11   : row_num(clues, row, num, 1,1);       
-    rn12   : row_num(clues, row, num, 1,2);       
-    rn13   : row_num(clues, row, num, 1,3);       
-    rn14   : row_num(clues, row, num, 1,4);       
-    rn21   : row_num(clues, row, num, 2,1);       
-    rn22   : row_num(clues, row, num, 2,2);       
-    rn23   : row_num(clues, row, num, 2,3);       
-    rn24   : row_num(clues, row, num, 2,4);       
-    rn31   : row_num(clues, row, num, 3,1);       
-    rn32   : row_num(clues, row, num, 3,2);       
-    rn33   : row_num(clues, row, num, 3,3);       
-    rn34   : row_num(clues, row, num, 3,4);       
+ --   rn01   : row_num(clues, row, num, 0,1);       
+ --   rn02   : row_num(clues, row, num, 0,2);       
+ --   rn03   : row_num(clues, row, num, 0,3);       
+ --   rn04   : row_num(clues, row, num, 0,4);       
+ --   rn11   : row_num(clues, row, num, 1,1);       
+ --   rn12   : row_num(clues, row, num, 1,2);       
+ --   rn13   : row_num(clues, row, num, 1,3);       
+ --   rn14   : row_num(clues, row, num, 1,4);       
+ --   rn21   : row_num(clues, row, num, 2,1);       
+ --   rn22   : row_num(clues, row, num, 2,2);       
+ --   rn23   : row_num(clues, row, num, 2,3);       
+ --   rn24   : row_num(clues, row, num, 2,4);       
+ --   rn31   : row_num(clues, row, num, 3,1);       
+ --   rn32   : row_num(clues, row, num, 3,2);       
+ --   rn33   : row_num(clues, row, num, 3,3);       
+ --   rn34   : row_num(clues, row, num, 3,4);       
    --this are the box-number constraints
-    bn01   : box_num(clues, box, num, 0,1);       
-    bn02   : box_num(clues, box, num, 0,2);       
-    bn03   : box_num(clues, box, num, 0,3);       
-    bn04   : box_num(clues, box, num, 0,4);       
-    bn11   : box_num(clues, box, num, 1,1);       
-    bn12   : box_num(clues, box, num, 1,2);       
-    bn13   : box_num(clues, box, num, 1,3);       
-    bn14   : box_num(clues, box, num, 1,4);       
-    bn21   : box_num(clues, box, num, 2,1);       
-    bn22   : box_num(clues, box, num, 2,2);       
-    bn23   : box_num(clues, box, num, 2,3);       
-    bn24   : box_num(clues, box, num, 2,4);       
-    bn31   : box_num(clues, box, num, 3,1);       
-    bn32   : box_num(clues, box, num, 3,2);       
-    bn33   : box_num(clues, box, num, 3,3);       
-    bn34   : box_num(clues, box, num, 3,4);       
+                              --bn01 is box 0, number 1 constraint
+  --  bn01   : box_num(clues, row, col, num, 0,1);       
+  --  bn02   : box_num(clues, row,col, num, 0,2);       
+  --  bn03   : box_num(clues, row,col, num, 0,3);       
+  --  bn04   : box_num(clues, row, col, num, 0,4);       
+  --  bn11   : box_num(clues, row, col, num, 1,1);       
+ ----   bn12   : box_num(clues, row, col, num, 1,2);       
+ --   bn13   : box_num(clues, row, col, num, 1,3);       
+----    bn14   : box_num(clues, row, col, num, 1,4);       
+--    bn21   : box_num(clues, row, col, num, 2,1);       
+--    bn22   : box_num(clues, row, col, num, 2,2);       
+--    bn23   : box_num(clues, row, col, num, 2,3);       
+--    bn24   : box_num(clues, row, col, num, 2,4);       
+--    bn31   : box_num(clues, row, col, num, 3,1);       
+--    bn32   : box_num(clues, row, col, num, 3,2);       
+ --   bn33   : box_num(clues, row, col, num, 3,3);       
+--    bn34   : box_num(clues, row, col, num, 3,4);       
 
---  INVAR --my understanding is that this is like init+trans
- --   clues[row*n+col] = 0;    -- move/4 maps to that moves N*N grid cell.
   INIT
-    (clues[row*n+col] = 0) & col_num_grid[n*col + num - 1] = FALSE;  
-    -- either move will be deleting from a non empty cell, XOR inserting
-    -- to one in a manner that satisfies the constraints 
---    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
-      --note have to do num-1 because num is 1..4, we need 0..3 for indicies
+      (clues[row*n+col] = 0);  
+
   TRANS
-    grid[n*next(row)+next(col)] = num xor
-      ((grid[n*next(row)+next(col)] = 0) & (col_num_grid[n*next(col) + next(num) - 1] = FALSE));
+    clues[next(row)*n+next(col)] = 0;
 
-
---removed coz invar    clues[next(row*n+col)] = 0;  
   
   DEFINE
--- cannot have raw module references in grid, but can have grid of their attributes
     col_num_grid := [ cn01.sat, cn02.sat, cn03.sat, cn04.sat,
                       cn11.sat, cn12.sat, cn13.sat, cn14.sat,
                       cn21.sat, cn22.sat, cn23.sat, cn24.sat,
@@ -99,27 +91,26 @@ MODULE main
                       c12.value, c13.value, c14.value, c15.value  ];
     n := box_rows+box_cols;
     nminus := n - 1;
-    num_grid := (n*n)-1;    -- number of grid cells, minus 1
-    num_moves := (n*n*n)-1; -- number of possible (r,c,#) values, minus 1
     box_rows := 2;
     box_cols := 2; --remember, in  6*6 sudoku, box has 2 rows and 3 cols
-    -- no_empty evaluates to true only when no cells are empty
+
     no_empty :=           
       c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
       c04.value != 0 & c05.value != 0 & c06.value != 0 & c07.value != 0 &
       c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &  
       c12.value != 0 & c13.value != 0 & c14.value != 0 & c15.value != 0 ;
+
+    columns_sat :=   cn01.sat = TRUE & cn02.sat = TRUE & cn03.sat = TRUE & cn04.sat = TRUE &
+                     cn11.sat = TRUE & cn12.sat = TRUE & cn13.sat = TRUE & cn14.sat = TRUE &
+                     cn21.sat = TRUE & cn22.sat = TRUE & cn23.sat = TRUE & cn24.sat = TRUE &
+                     cn31.sat = TRUE & cn32.sat = TRUE & cn33.sat = TRUE & cn24.sat = TRUE  ;
     clues := [3,0,4,0,
               0,1,0,3, 
               2,3,0,0,
               1,0,0,2];
-  --once the constraints are all in place, this CTLSPEC should yield the solution
-  CTLSPEC !EF (no_empty) ;
 
--- c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
--- c04.value != 0 & c05.value != 0 & c06.value != 0 & c07.value != 0 &
--- c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &
--- c12.value != 0 & c13.value != 0 & c14.value != 0 & c15.value != 0 &
+  CTLSPEC !EF (columns_sat & no_empty) ;
+
 
 MODULE cell(starting_value, grid_index, row, col, num)
   VAR
@@ -128,45 +119,20 @@ MODULE cell(starting_value, grid_index, row, col, num)
     init(value) := starting_value;
     next(value) := case
                 --if move does not concern this cell, value stays same
-                row*n+col != index : value;
+                row*n+col != grid_index : value;
                 --else if move is for this cell, and cell is empty   
                 --then fill this cell with the the new value
-                (row*n+col = index) & (value = 0) : num ;
+                (row* n + col = grid_index) & (value = 0) : num ;
                 --else if move is for this cell, but cell has a value, undo it
                 -- (Because case only gets to this if previous two were false,
                 -- the else if is implicit)
-                 TRUE : 0;
+--                 TRUE : 0;
+                row*n+col = grid_index & value!=0 : 0;
     esac;
   DEFINE
-    index := grid_index; --the index of this cell      
     n := 4; 
 
 MODULE col_num(grid, col, num, mycol, mynum)
-  -- clues is the n*n clues grid, implemented as a 1*(n*n) array
-  -- col, num are from the current move
-  --mycol, mynum are the col and num of this constraint
- -- VAR
- --   sat : boolean;
---  ASSIGN
-    --constraint satisfied if only one cell in col has value num
---    init(sat) :=  clues[mycol] = mynum xor 
---                        clues[1*n+mycol] = mynum xor
----                        clues[2*n+mycol] = mynum xor
---                        clues[3*n+mycol] = mynum ;
- --   next(sat) :=  grid[mycol] = mynum xor 
-  --                      grid[1*n+mycol] = mynum xor
-   --                     grid[2*n+mycol] = mynum xor
-    --                    grid[3*n+mycol] = mynum ;
---    next(sat) := case
-
---                  --case one, this move does not effect this constraint
---                 !(mycol = col & mynum = num) : sat;
---                  --or if this move does effect this constraint
---                  -- (ie, either a move satisfiying the unsatisfied constraint 
-                  -- is added, or a move undoing the satisfaction of the  
-                  -- constraint occurs)
---                  TRUE : !sat;
---    esac;
   DEFINE
     n := 4;
     sat :=  grid[mycol] = mynum xor 
@@ -174,5 +140,13 @@ MODULE col_num(grid, col, num, mycol, mynum)
             grid[2*n+mycol] = mynum xor
             grid[3*n+mycol] = mynum ;
 
-MODULE row_num(clues, row, num, myrow, mynum)
-MODULE box_num(clues, box, num, mybox, mynum)
+MODULE row_num(grid, row, num, myrow, mynum)
+-- row_num should be quite similar to col_num
+
+MODULE box_num(grid, row, col, num, mybox, mynum)
+--mybox is this modules box number. 
+--the box with cell 0,0 is box 0, the box with cell 3,3 is box 3
+--the box with cell 0,3 is box 1
+
+--just use mod and/or integer division to calculate the box number 
+-- from the row/col and to see if the current row/col corresponds to mybox
