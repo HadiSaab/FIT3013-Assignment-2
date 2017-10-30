@@ -18,13 +18,38 @@ MODULE main
     c14   : cell(clues[14],14 , move);       
     c15   : cell(clues[15], 15, move);       
 
-   
+   --this are the column-number constraints
+    cn01   : col_num(clues, move, 0,1);       
+    cn02   : col_num(clues, move, 0,2);       
+    cn03   : col_num(clues, move, 0,3);       
+    cn04   : col_num(clues, move, 0,4);       
+    cn11   : col_num(clues, move, 1,1);       
+    cn12   : col_num(clues, move, 1,2);       
+    cn13   : col_num(clues, move, 1,3);       
+    cn14   : col_num(clues, move, 1,4);       
+    cn21   : col_num(clues, move, 2,1);       
+    cn22   : col_num(clues, move, 2,2);       
+    cn23   : col_num(clues, move, 2,3);       
+    cn24   : col_num(clues, move, 2,4);       
+    cn31   : col_num(clues, move, 3,1);       
+    cn32   : col_num(clues, move, 3,2);       
+    cn33   : col_num(clues, move, 3,3);       
+    cn34   : col_num(clues, move, 3,4);       
+
   INIT                    -- moves must not overwrite clues
     clues[move/n] = 0;    -- move/4 maps to that moves N*N grid cell.
     
   TRANS
+    --TODO right now, we are just adding and removing cells, with 
+    -- the below constraint meaning we do not overwrite or remove clues
+    -- I have started on the column-number constraint, building the MODULE
+    -- there needs to be a n*n grid col_num_gird, with each cell holding
+    -- one of the cnXX objects.
+
+    -- then, we create two next(move) cases: one for unfilled cells, one for filled cells. filled cells operate as is, unfilled cells (which would result in an insert) must pass the col-num, row-num and box-num constraints. ie
+    --  next(move)
+
     clues[next(move)/n] = 0;  
-  --INVAR clues[move] = 0;
   
   DEFINE
 -- cannot have raw module references in grid, but can have grid of their attributes
@@ -46,6 +71,7 @@ MODULE main
               0,1,0,3, 
               2,3,0,0,
               1,0,0,2];
+  --once the constraints are all in place, this CTLSPEC should yield the solution
   CTLSPEC !EF (no_empty) ;
 
 -- c00.value != 0 & c01.value != 0 & c02.value != 0 & c03.value != 0 &
@@ -60,6 +86,7 @@ MODULE cell(starting_value, grid_index, move)
 -- MODULE main prevents move from mapping to a cell containing a starting clue
   VAR
     value: 0..n; --this cells number value. 0 represents empty
+    possibilities: 1..n of boolean; -- possibilities[i] = TRUE iff i is a possible value for cell given current state. 
   ASSIGN
     init(value) := starting_value;
     next(value) := case
@@ -79,3 +106,31 @@ MODULE cell(starting_value, grid_index, move)
     new_value := (move mod n) + 1;
     n := 4; 
 
+MODULE col_num(clues, move, col, num)
+  -- clues is the n*n clues grid
+  --move is the current move
+  --col is my column
+  --num is my num
+  VAR
+--    my_col := 1..n;
+--    my_num := 1..n;
+    satisfied := boolean;
+  ASSIGN
+    --constraint satisfied if only one cell in col has value num
+    init(satisfied) :=  grid[col] = num xor 
+                        grid[1*n+col] = num xor
+                        grid[2*n+col] = num xor
+                        grid[3*n+col] = num ;
+    next(satisfied) := case
+                  --case one, this move does not effect this constraint
+                  !(move_col = col & move_num = num) : satisfied;
+                  --or if this move does effect this constraint
+                  -- (ie, either a move satisfiying the unsatisfied constraint 
+                  -- is added, or a move undoing the satisfaction of the  
+                  -- constraint occurs)
+                  TRUE : !satisfied;
+    esac;
+  DEFINE
+    move_col := (move/n) mod n;  --(move/n) mod n yields the column of that move
+    move_value := (move mod n) + 1;
+    n := 4;
