@@ -36,7 +36,8 @@ MODULE main
     cn31   : col_num(grid, col, num, 3,1);       
     cn32   : col_num(grid, col, num, 3,2);       
     cn33   : col_num(grid, col, num, 3,3);       
-    cn34   : col_num(grid, col, num, 3,4);       
+    cn34   : col_num(grid, col, num, 3,4);
+    
    --this are the row-number constraints
  --   rn01   : row_num(clues, row, num, 0,1);       
  --   rn02   : row_num(clues, row, num, 0,2);       
@@ -53,25 +54,26 @@ MODULE main
  --   rn31   : row_num(clues, row, num, 3,1);       
  --   rn32   : row_num(clues, row, num, 3,2);       
  --   rn33   : row_num(clues, row, num, 3,3);       
- --   rn34   : row_num(clues, row, num, 3,4);       
+ --   rn34   : row_num(clues, row, num, 3,4);
+ 
    --this are the box-number constraints
                               --bn01 is box 0, number 1 constraint
-  --  bn01   : box_num(clues, row, col, num, 0,1);       
-  --  bn02   : box_num(clues, row,col, num, 0,2);       
-  --  bn03   : box_num(clues, row,col, num, 0,3);       
-  --  bn04   : box_num(clues, row, col, num, 0,4);       
-  --  bn11   : box_num(clues, row, col, num, 1,1);       
- ----   bn12   : box_num(clues, row, col, num, 1,2);       
- --   bn13   : box_num(clues, row, col, num, 1,3);       
-----    bn14   : box_num(clues, row, col, num, 1,4);       
---    bn21   : box_num(clues, row, col, num, 2,1);       
---    bn22   : box_num(clues, row, col, num, 2,2);       
---    bn23   : box_num(clues, row, col, num, 2,3);       
---    bn24   : box_num(clues, row, col, num, 2,4);       
---    bn31   : box_num(clues, row, col, num, 3,1);       
---    bn32   : box_num(clues, row, col, num, 3,2);       
- --   bn33   : box_num(clues, row, col, num, 3,3);       
---    bn34   : box_num(clues, row, col, num, 3,4);       
+  --  bn01   : box_num(clues, row, col, num, 0,0,1);       
+  --  bn02   : box_num(clues, row, col, num, 0,0,2);       
+  --  bn03   : box_num(clues, row, col, num, 0,0,3);       
+  --  bn04   : box_num(clues, row, col, num, 0,0,4);       
+  --  bn11   : box_num(clues, row, col, num, 0,2,1);       
+ --   bn12   : box_num(clues, row, col, num, 0,2,2);       
+ --   bn13   : box_num(clues, row, col, num, 0,2,3);       
+--    bn14   : box_num(clues, row, col, num, 0,2,4);       
+--    bn21   : box_num(clues, row, col, num, 2,0,1);       
+--    bn22   : box_num(clues, row, col, num, 2,0,2);       
+--    bn23   : box_num(clues, row, col, num, 2,0,3);       
+--    bn24   : box_num(clues, row, col, num, 2,0,4);       
+--    bn31   : box_num(clues, row, col, num, 2,2,1);       
+--    bn32   : box_num(clues, row, col, num, 2,2,2);       
+ --   bn33   : box_num(clues, row, col, num, 2,2,3);       
+--    bn34   : box_num(clues, row, col, num, 2,2,4);       
 
   INIT
       (clues[row*n+col] = 0);  
@@ -85,6 +87,7 @@ MODULE main
                       cn11.sat, cn12.sat, cn13.sat, cn14.sat,
                       cn21.sat, cn22.sat, cn23.sat, cn24.sat,
                       cn31.sat, cn32.sat, cn33.sat, cn24.sat  ];
+                      
     grid :=         [ c00.value, c01.value, c02.value, c03.value,
                       c04.value, c05.value, c06.value, c07.value,
                       c08.value, c09.value, c10.value, c11.value,
@@ -141,12 +144,22 @@ MODULE col_num(grid, col, num, mycol, mynum)
             grid[3*n+mycol] = mynum ;
 
 MODULE row_num(grid, row, num, myrow, mynum)
--- row_num should be quite similar to col_num
+  DEFINE
+    n := 4;
+    sat :=  grid[n*myrow] = mynum xor 
+            grid[n*myrow+1] = mynum xor
+            grid[n*myrow+2] = mynum xor
+            grid[n*myrow+3] = mynum ;
 
-MODULE box_num(grid, row, col, num, mybox, mynum)
---mybox is this modules box number. 
+MODULE box_num(grid, row, col, num, myrow, mycol, mynum)
+--mybox is this modules box number.
 --the box with cell 0,0 is box 0, the box with cell 3,3 is box 3
 --the box with cell 0,3 is box 1
 
---just use mod and/or integer division to calculate the box number 
--- from the row/col and to see if the current row/col corresponds to mybox
+  DEFINE
+    n := 4;
+    sat:= grid[myrow*n+col] = mynum xor
+          grid[myrow*n+col+1] = mynum xor
+          grid[myrow*n+col+n] = mynum xor
+          grid[myrow*n+col+n+1] = mynum ;
+      
