@@ -1,43 +1,79 @@
 MODULE main 
  VAR
-    move  : 0..(num_moves); 
-    c00   : cell(clues[0], 0, move);       
-    c01   : cell(clues[1], 1, move);       
-    c02   : cell(clues[2], 2, move);       
-    c03   : cell(clues[3], 3, move);       
-    c04   : cell(clues[4], 4, move);       
-    c05   : cell(clues[5], 5, move);       
-    c06   : cell(clues[6], 6, move);       
-    c07   : cell(clues[7], 7, move);       
-    c08   : cell(clues[8], 8, move);       
-    c09   : cell(clues[9], 9, move);       
-    c10   : cell(clues[10],10 , move);       
-    c11   : cell(clues[11], 11, move);       
-    c12   : cell(clues[12],12 , move);       
-    c13   : cell(clues[13],13 , move);       
-    c14   : cell(clues[14],14 , move);       
-    c15   : cell(clues[15], 15, move);       
+    col   : 0..nminus;
+    row   : 0..nminus;
+    num   : 1..n;
+    c00   : cell(clues[0], 0, row, col, num);       
+    c01   : cell(clues[1], 1, row, col, num);       
+    c02   : cell(clues[2], 2, row, col, num);       
+    c03   : cell(clues[3], 3, row, col, num);       
+    c04   : cell(clues[4], 4, row, col, num);       
+    c05   : cell(clues[5], 5, row, col, num);       
+    c06   : cell(clues[6], 6, row, col, num);       
+    c07   : cell(clues[7], 7, row, col, num);       
+    c08   : cell(clues[8], 8, row, col, num);       
+    c09   : cell(clues[9], 9, row, col, num);       
+    c10   : cell(clues[10],10 , row, col, num);       
+    c11   : cell(clues[11], 11, row, col, num);       
+    c12   : cell(clues[12],12 , row, col, num);       
+    c13   : cell(clues[13],13 , row, col, num);       
+    c14   : cell(clues[14],14 , row, col, num);       
+    c15   : cell(clues[15], 15, row, col, num);       
 
    --this are the column-number constraints
-    cn01   : col_num(clues, move, 0,1);       
-    cn02   : col_num(clues, move, 0,2);       
-    cn03   : col_num(clues, move, 0,3);       
-    cn04   : col_num(clues, move, 0,4);       
-    cn11   : col_num(clues, move, 1,1);       
-    cn12   : col_num(clues, move, 1,2);       
-    cn13   : col_num(clues, move, 1,3);       
-    cn14   : col_num(clues, move, 1,4);       
-    cn21   : col_num(clues, move, 2,1);       
-    cn22   : col_num(clues, move, 2,2);       
-    cn23   : col_num(clues, move, 2,3);       
-    cn24   : col_num(clues, move, 2,4);       
-    cn31   : col_num(clues, move, 3,1);       
-    cn32   : col_num(clues, move, 3,2);       
-    cn33   : col_num(clues, move, 3,3);       
-    cn34   : col_num(clues, move, 3,4);       
+    cn01   : col_num(clues, col, num, 0,1);       
+    cn02   : col_num(clues, col, num, 0,2);       
+    cn03   : col_num(clues, col, num, 0,3);       
+    cn04   : col_num(clues, col, num, 0,4);       
+    cn11   : col_num(clues, col, num, 1,1);       
+    cn12   : col_num(clues, col, num, 1,2);       
+    cn13   : col_num(clues, col, num, 1,3);       
+    cn14   : col_num(clues, col, num, 1,4);       
+    cn21   : col_num(clues, col, num, 2,1);       
+    cn22   : col_num(clues, col, num, 2,2);       
+    cn23   : col_num(clues, col, num, 2,3);       
+    cn24   : col_num(clues, col, num, 2,4);       
+    cn31   : col_num(clues, col, num, 3,1);       
+    cn32   : col_num(clues, col, num, 3,2);       
+    cn33   : col_num(clues, col, num, 3,3);       
+    cn34   : col_num(clues, col, num, 3,4);       
+   --this are the row-number constraints
+    rn01   : row_num(clues, row, num, 0,1);       
+    rn02   : row_num(clues, row, num, 0,2);       
+    rn03   : row_num(clues, row, num, 0,3);       
+    rn04   : row_num(clues, row, num, 0,4);       
+    rn11   : row_num(clues, row, num, 1,1);       
+    rn12   : row_num(clues, row, num, 1,2);       
+    rn13   : row_num(clues, row, num, 1,3);       
+    rn14   : row_num(clues, row, num, 1,4);       
+    rn21   : row_num(clues, row, num, 2,1);       
+    rn22   : row_num(clues, row, num, 2,2);       
+    rn23   : row_num(clues, row, num, 2,3);       
+    rn24   : row_num(clues, row, num, 2,4);       
+    rn31   : row_num(clues, row, num, 3,1);       
+    rn32   : row_num(clues, row, num, 3,2);       
+    rn33   : row_num(clues, row, num, 3,3);       
+    rn34   : row_num(clues, row, num, 3,4);       
+   --this are the box-number constraints
+    bn01   : box_num(clues, box, num, 0,1);       
+    bn02   : box_num(clues, box, num, 0,2);       
+    bn03   : box_num(clues, box, num, 0,3);       
+    bn04   : box_num(clues, box, num, 0,4);       
+    bn11   : box_num(clues, box, num, 1,1);       
+    bn12   : box_num(clues, box, num, 1,2);       
+    bn13   : box_num(clues, box, num, 1,3);       
+    bn14   : box_num(clues, box, num, 1,4);       
+    bn21   : box_num(clues, box, num, 2,1);       
+    bn22   : box_num(clues, box, num, 2,2);       
+    bn23   : box_num(clues, box, num, 2,3);       
+    bn24   : box_num(clues, box, num, 2,4);       
+    bn31   : box_num(clues, box, num, 3,1);       
+    bn32   : box_num(clues, box, num, 3,2);       
+    bn33   : box_num(clues, box, num, 3,3);       
+    bn34   : box_num(clues, box, num, 3,4);       
 
   INIT                    -- moves must not overwrite clues
-    clues[move/n] = 0;    -- move/4 maps to that moves N*N grid cell.
+    clues[row*n+col] = 0;    -- move/4 maps to that moves N*N grid cell.
     
   TRANS
     --TODO right now, we are just adding and removing cells, with 
@@ -49,7 +85,7 @@ MODULE main
     -- then, we create two next(move) cases: one for unfilled cells, one for filled cells. filled cells operate as is, unfilled cells (which would result in an insert) must pass the col-num, row-num and box-num constraints. ie
     --  next(move)
 
-    clues[next(move)/n] = 0;  
+    clues[next(row*n+col)] = 0;  
   
   DEFINE
 -- cannot have raw module references in grid, but can have grid of their attributes
@@ -58,6 +94,7 @@ MODULE main
 --                    c08, c09, c10, c11,
  --                   c12, c13, c14.value, c15.value  ];
     n := box_rows+box_cols;
+    nminus := n - 1;
     num_grid := (n*n)-1;    -- number of grid cells, minus 1
     num_moves := (n*n*n)-1; -- number of possible (r,c,#) values, minus 1
     box_rows := 2;
@@ -79,51 +116,41 @@ MODULE main
 -- c08.value != 0 & c09.value != 0 & c10.value != 0 & c11.value != 0 &
 -- c12.value != 0 & c13.value != 0 & c14.value != 0 & c15.value != 0 &
 
-MODULE cell(starting_value, grid_index, move)
---note, each 'move' is a number in range 0..(n*n*n)-1
---move/n maps it to a cell in the 1d grid representing the 2d game grid
--- (move mod n) + 1 maps it to the value in range 1..n
--- MODULE main prevents move from mapping to a cell containing a starting clue
+MODULE cell(starting_value, grid_index, row, col, num)
   VAR
     value: 0..n; --this cells number value. 0 represents empty
-    possibilities: 1..n of boolean; -- possibilities[i] = TRUE iff i is a possible value for cell given current state. 
   ASSIGN
     init(value) := starting_value;
     next(value) := case
                 --if move does not concern this cell, value stays same
-                (move / n) != index : value;
+                row*n+col != index : value;
                 --else if move is for this cell, and cell is empty   
                 --then fill this cell with the the new value
-                ((move / n) = index) & (value = 0) : new_value ;
+                (row*n+col = index) & (value = 0) : num ;
                 --else if move is for this cell, but cell has a value, undo it
                 -- (Because case only gets to this if previous two were false,
                 -- the else if is implicit)
                  TRUE : 0;
     esac;
-    --move/n maps (r,c,n) to (r,c)
   DEFINE
     index := grid_index; --the index of this cell      
-    new_value := (move mod n) + 1;
     n := 4; 
 
-MODULE col_num(clues, move, col, num)
-  -- clues is the n*n clues grid
-  --move is the current move
-  --col is my column
-  --num is my num
+MODULE col_num(clues, col, num, mycol, mynum)
+  -- clues is the n*n clues grid, implemented as a 1*(n*n) array
+  -- col, num are from the current move
+  --mycol, mynum are the col and num of this constraint
   VAR
---    my_col := 1..n;
---    my_num := 1..n;
-    satisfied := boolean;
+    satisfied : boolean;
   ASSIGN
     --constraint satisfied if only one cell in col has value num
-    init(satisfied) :=  grid[col] = num xor 
-                        grid[1*n+col] = num xor
-                        grid[2*n+col] = num xor
-                        grid[3*n+col] = num ;
+    init(satisfied) :=  clues[mycol] = mynum xor 
+                        clues[1*n+mycol] = mynum xor
+                        clues[2*n+mycol] = mynum xor
+                        clues[3*n+mycol] = mynum ;
     next(satisfied) := case
                   --case one, this move does not effect this constraint
-                  !(move_col = col & move_num = num) : satisfied;
+                  !(mycol = col & mynum = num) : satisfied;
                   --or if this move does effect this constraint
                   -- (ie, either a move satisfiying the unsatisfied constraint 
                   -- is added, or a move undoing the satisfaction of the  
@@ -131,6 +158,7 @@ MODULE col_num(clues, move, col, num)
                   TRUE : !satisfied;
     esac;
   DEFINE
-    move_col := (move/n) mod n;  --(move/n) mod n yields the column of that move
-    move_value := (move mod n) + 1;
     n := 4;
+
+MODULE row_num(clues, row, num, myrow, mynum)
+MODULE box_num(clues, box, num, mybox, mynum)
