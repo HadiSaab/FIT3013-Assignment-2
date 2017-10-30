@@ -72,27 +72,28 @@ MODULE main
     bn33   : box_num(clues, box, num, 3,3);       
     bn34   : box_num(clues, box, num, 3,4);       
 
-  INIT                    -- moves must not overwrite clues
-    clues[row*n+col] = 0;    -- move/4 maps to that moves N*N grid cell.
+  INVAR --my understanding is that this is like init+trans
+    clues[row*n+col] = 0;  
+--  INIT                    -- moves must not overwrite clues
+ --   clues[row*n+col] = 0;    -- move/4 maps to that moves N*N grid cell.
     
   TRANS
-    --TODO right now, we are just adding and removing cells, with 
-    -- the below constraint meaning we do not overwrite or remove clues
-    -- I have started on the column-number constraint, building the MODULE
-    -- there needs to be a n*n grid col_num_gird, with each cell holding
-    -- one of the cnXX objects.
+    -- either move will be deleting from a non empty cell, XOR inserting
+    -- to one in a manner that satisfies the constraints 
+    next(grid[n*num+col] = 0)  xor next(col_num_grid[n*num+col] = FALSE);
 
-    -- then, we create two next(move) cases: one for unfilled cells, one for filled cells. filled cells operate as is, unfilled cells (which would result in an insert) must pass the col-num, row-num and box-num constraints. ie
-    --  next(move)
-
-    clues[next(row*n+col)] = 0;  
+--removed coz invar    clues[next(row*n+col)] = 0;  
   
   DEFINE
 -- cannot have raw module references in grid, but can have grid of their attributes
---    grid      := [  c00, c01, c02, c03,
---                    c04, c05, c06, c07,
---                    c08, c09, c10, c11,
- --                   c12, c13, c14.value, c15.value  ];
+    col_num_grid := [ cn01.sat, cn02.sat, cn03.sat, cn04.sat,
+                      cn11.sat, cn12.sat, cn13.sat, cn14.sat,
+                      cn21.sat, cn22.sat, cn23.sat, cn24.sat,
+                      cn31.sat, cn32.sat, cn33.sat, cn24.sat  ];
+    grid :=         [ c00.value, c01.value, c02.value, c03.value,
+                      c04.value, c05.value, c06.value, c07.value,
+                      c08.value, c09.value, c10.value, c11.value,
+                      c12.value, c13.value, c14.value, c15.value  ];
     n := box_rows+box_cols;
     nminus := n - 1;
     num_grid := (n*n)-1;    -- number of grid cells, minus 1
@@ -141,21 +142,21 @@ MODULE col_num(clues, col, num, mycol, mynum)
   -- col, num are from the current move
   --mycol, mynum are the col and num of this constraint
   VAR
-    satisfied : boolean;
+    sat : boolean;
   ASSIGN
     --constraint satisfied if only one cell in col has value num
-    init(satisfied) :=  clues[mycol] = mynum xor 
+    init(sat) :=  clues[mycol] = mynum xor 
                         clues[1*n+mycol] = mynum xor
                         clues[2*n+mycol] = mynum xor
                         clues[3*n+mycol] = mynum ;
-    next(satisfied) := case
+    next(sat) := case
                   --case one, this move does not effect this constraint
-                  !(mycol = col & mynum = num) : satisfied;
+                  !(mycol = col & mynum = num) : sat;
                   --or if this move does effect this constraint
                   -- (ie, either a move satisfiying the unsatisfied constraint 
                   -- is added, or a move undoing the satisfaction of the  
                   -- constraint occurs)
-                  TRUE : !satisfied;
+                  TRUE : !sat;
     esac;
   DEFINE
     n := 4;
