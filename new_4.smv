@@ -1,0 +1,28 @@
+MODULE main 
+ VAR
+    move : 0..(num_moves); 
+    grid : array 0..num_grid of 0..n;
+
+   
+  INIT                    -- moves must not overwrite clues
+    clues[move/4] = 0;    -- move/4 maps to that moves N*N grid cell.
+  INIT
+    grid = clues;         --seeing if i can initialize the grid this way
+    
+
+  TRANS
+    clues[next(move)  n] = 0;  
+  --INVAR clues[move] = 0;
+  
+  DEFINE
+    n := box_rows+box_cols;
+    num_grid := (n*n)-1;    -- number of grid cells, minus 1
+    num_moves := (n*n*n)-1; -- number of possible (r,c,#) values, minus 1
+    box_rows := 2;
+    box_cols :=2;
+    clues := [3,0,4,0,
+              0,1,0,3, 
+              2,3,0,0,
+              1,0,0,2];
+    
+  CTLSPEC EF (clues[15] = 2);
